@@ -23,7 +23,14 @@ document.addEventListener("DOMContentLoaded", () => {
     // if (ballX > 675 || ballX <= 0) dx *= -1;
     // if (ballY > 375 || ballY <= 0) dy *= -1;
 
-    
+    // paddle.offsetLeft  + paddle.offsetWidth   -> if left (wrt table) of ball < right (wrt table)  of the paddle 
+    // ballY > paddle.offsetTop -> if top (wrt table) of ball > top of (wrt table ) paddle 
+    // ballY - ballY.offsetHeight < paddle.offsetTop + paddle.offsetHeight ->
+    // ballY - ballY.offsetHeight  -> bottom of the ball
+    // paddle.offsetTop + paddle.offsetHeight -> bottom  of the paddle
+    //  it means bottom of the ball is less than bottom of paddle
+
+
     // Collision of ball and paddle
     if(ballX <paddle.offsetLeft  + paddle.offsetWidth   && ballY > paddle.offsetTop  && ballY - ballY.offsetHeight < paddle.offsetTop + paddle.offsetHeight){
       dx += -1
@@ -38,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }, 1);
 
   let paddleY = 0;
-  let dpY = 5;
+  let dpY = 10;
 
   document.addEventListener("keydown", (event) => {
 
@@ -56,7 +63,16 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 
+  document.addEventListener("mousemove" , (event) =>{
+    let mouseDistanceFromTop = event.clientY    // this is the distance of the mouse point from the top of the screen 
+    let distanceOfTableFromTop = table.offsetTop 
+    let mousePointControl = mouseDistanceFromTop - distanceOfTableFromTop - paddle.offsetHeight/2
+    
+    paddleY = mousePointControl
+    if(paddleY <= 0 || paddleY > table.offsetHeight - paddle.offsetHeight) return   // if bottom of the paddle touches bottom of the table return
+    paddle.style.top = `${paddleY}px`;
 
+  })
 
 
 
